@@ -1,5 +1,5 @@
 {
-    "name": "zein/zacl",
+    "name": "zein-jayantara/zacl",
     "description": "Api manage ACL",
     "type": "composer-plugin",
     "license":"MIT",
