@@ -1,0 +1,16 @@
+{
+    "name": "zein/zacl",
+    "description": "Api manage ACL",
+    "type": "composer-plugin",
+    "license":"MIT",
+    "authors": [
+        {
+            "name": "zein",
+            "email": "zein@jayantara.co.id"
+        }
+    ],
+    "minimum-stability":"dev",
+    "require": {
+        "zizaco/entrust": "5.2.x-dev"
+    }
+}
