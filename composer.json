@@ -9,8 +9,8 @@
             "email": "zein@jayantara.co.id"
         }
     ],
-    "require": {},
     "minimum-stability": "stable",
+    "require": {},
     "autoload": {
         "psr-4": {
             "Zein\\zacl\\": "src/"
