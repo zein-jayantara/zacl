@@ -8,7 +8,6 @@
             "email": "zein@jayantara.co.id"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "zizaco/entrust": "dev-master"
     },
