@@ -12,7 +12,6 @@
     "require": {
         "zizaco/entrust": "5.2.x-dev"
     },
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Zein\\zacl\\": "src/"
