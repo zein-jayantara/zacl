@@ -9,7 +9,7 @@
             "email": "zein@jayantara.co.id"
         }
     ],
-    "minimum-stability":"dev",
+    "minimum-stability":"stable",
     "require": {
         "zizaco/entrust": "5.2.x-dev"
     }
