@@ -1,16 +1,21 @@
 {
     "name": "zein-jayantara/zacl",
-    "description": "Api manage ACL",
     "type": "library",
-    "license":"MIT",
+    "license": "MIT",
+    "description": "Api manage ACL",
     "authors": [
         {
-            "name": "zein",
+            "name": "Jalin ACL",
             "email": "zein@jayantara.co.id"
         }
     ],
-    "minimum-stability":"stable",
     "require": {
         "zizaco/entrust": "5.2.x-dev"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Zein\\zacl\\": "src/"
+        }
     }
 }
