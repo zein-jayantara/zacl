@@ -1,11 +1,9 @@
 {
     "name": "zein-jayantara/zacl",
-    "type": "library",
     "license": "MIT",
-    "description": "Api manage ACL",
     "authors": [
         {
-            "name": "Jalin ACL",
+            "name": "Jalin Barang",
             "email": "zein@jayantara.co.id"
         }
     ],
@@ -13,7 +11,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Zein\\zacl\\": "src/"
+            "Jalinmodule\\Zacl\\": "src/"
         }
     }
 }
