@@ -9,11 +9,11 @@
         }
     ],
     "require": {
-        "zizaco/entrust": "dev-master"
+        "zizaco/entrust": "~1.0"
     },
     "autoload": {
         "psr-4": {
-            "Zein\\Zacl\\": "src/"
+            "Zein\\zacl\\": "src/"
         }
     }
 }
