@@ -1,7 +1,7 @@
 {
     "name": "zein-jayantara/zacl",
     "description": "Api manage ACL",
-    "type": "composer-plugin",
+    "type": "library",
     "license":"MIT",
     "authors": [
         {
