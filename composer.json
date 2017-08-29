@@ -1,18 +1,18 @@
 {
     "name": "zein-jayantara/zacl",
-	"type": "library",
-	"license": "MIT",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Jalin Zacl",
             "email": "zein@jayantara.co.id"
         }
     ],
-	"minimum-stability": "stable",
+    "minimum-stability": "stable",
     "require": {},
     "autoload": {
         "psr-4": {
-            "Jalinmodule\\Zacl\\": "src/"
+            "Zein\\Zacl\\": "src/"
         }
     }
 }
