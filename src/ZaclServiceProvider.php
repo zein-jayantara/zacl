@@ -23,6 +23,8 @@ class ZaclServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        
+        $this->app->make('Zein\Zacl\Controllers\RolesController');
         //
     }
 }
