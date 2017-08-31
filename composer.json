@@ -10,7 +10,7 @@
     ],
     "minimum-stability" : "dev",
     "require": {
-        "zizaco/entrust": "^1.*"
+        "zizaco/entrust": "1.*"
     },
     "autoload": {
         "psr-4": {
