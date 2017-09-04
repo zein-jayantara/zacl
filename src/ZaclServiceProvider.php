@@ -20,12 +20,9 @@ class ZaclServiceProvider extends ServiceProvider
             __DIR__.'/config/config.php' => app()->basePath() . '/config/entrust.php',
         ]);
         
-        $entrustSP = new EntrustServiceProvider;
-        // Register commands
-        $entrustSP->commands('command.entrust.migration');
-
-        // Register blade directives
-        $entrustSP->bladeDirectives();
+        $entrustSP = new EntrustServiceProvider($this->app);
+       
+        $entrustSP->boot();
     }
 
     /**
@@ -41,12 +38,9 @@ class ZaclServiceProvider extends ServiceProvider
         $this->app->make('Zein\Zacl\Controllers\RolesController');
         $this->app->make('Zein\Zacl\Controllers\RolesusersController');
         
-        $entrustSP = new EntrustServiceProvider;
-        $entrustSP->registerEntrust();
+        $entrustSP = new EntrustServiceProvider($this->app);
+        $entrustSP->register();
 
-        $entrustSP->registerCommands();
-
-        $entrustSP->mergeConfig();
         //
     }
     
