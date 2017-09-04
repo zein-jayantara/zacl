@@ -13,7 +13,7 @@ use Zein\Zacl\Models\Permission;
 class PermissionsController extends Controller{
     
     public function index(){   
-        $data = DB::table('roles')->get();
+        $data = DB::table('permissions')->paginate(config('entrust.paginate'));
         return Lib::sendData($data);
     }
     
@@ -32,20 +32,20 @@ class PermissionsController extends Controller{
         }
         
         if(!$request->id){
-            $owner = new EntrustPermission();
+            $permission = new EntrustPermission();
         }else{
-            $owner = EntrustPermission::find($request->id);
-            if(!$owner){
+            $permission = EntrustPermission::find($request->id);
+            if(!$permission){
                 return Lib::sendError("id $request->id tidak ada");
             }
         }
         
-        $owner->name         = $request->name;
-        $owner->display_name = $request->display_name; // optional
-        $owner->description  = $request->description; // optional
-        $owner->save();
+        $permission->name         = $request->name;
+        $permission->display_name = $request->display_name; // optional
+        $permission->description  = $request->description; // optional
+        $permission->save();
 
-        return Lib::sendData($owner);
+        return Lib::sendData($permission);
         
     }
     
@@ -54,8 +54,11 @@ class PermissionsController extends Controller{
     }
     
     public function delete($id){ 
-        $role = Permission::find($id);
-        $role->delete();
+        $permission = Permission::find($id);
+        if($permission){
+            $permission->delete();
+        }
+        
         return Lib::sendData(null);
     }
     

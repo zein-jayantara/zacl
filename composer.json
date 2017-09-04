@@ -9,8 +9,7 @@
         }
     ],
     "require": {
-        "zizaco/entrust": "1.*",
-        "kodeine/laravel-acl": "v0.1.3"
+        "zizaco/entrust": "1.*"
     },
     "autoload": {
         "psr-4": {

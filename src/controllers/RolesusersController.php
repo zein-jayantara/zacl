@@ -9,15 +9,14 @@ use Zizaco\Entrust\EntrustPermission;
 use DB;
 use Validator;
 use Zein\Zacl\Lib;
-use Zein\Zacl\Models\PermissionRole;
-use Zein\Zacl\Models\Permission;
+use Zein\Zacl\Models\Roleuser;
 use Zein\Zacl\Models\Role;
 
-class PermissionsrolesController extends Controller{
+class RolesusersController extends Controller{
     
     public function attach(Request $request){
         $validator = Validator::make($request->all(), [
-            'permissionid' => 'required',
+            'userid' => 'required',
             'roleid' => 'required',
         ]);
 
@@ -30,16 +29,16 @@ class PermissionsrolesController extends Controller{
             return Lib::sendError("role tidak ditemukan");
         }
         
-        $permission = EntrustPermission::find($request->permissionid);
-        if (!$permission) {
-            return Lib::sendError("permission tidak ditemukan");
+        $user = config('entrust.user')::find($request->userid);
+        if (!$user) {
+            return Lib::sendError("user tidak ditemukan");
         }
         
-        PermissionRole::updateOrCreate([
-                    'permission_id' => $request->permissionid,
+        Roleuser::updateOrCreate([
+                    'user_id' => $request->userid,
                     'role_id' => $request->roleid,
                 ],[
-                    'permission_id' => $request->permissionid,
+                    'user_id' => $request->userid,
                     'role_id' => $request->roleid,
                 ]);
         
@@ -48,7 +47,7 @@ class PermissionsrolesController extends Controller{
     
     public function unattach(Request $request){
         $validator = Validator::make($request->all(), [
-            'permissionid' => 'required',
+            'userid' => 'required',
             'roleid' => 'required',
         ]);
 
@@ -61,32 +60,32 @@ class PermissionsrolesController extends Controller{
             return Lib::sendError("role tidak ditemukan");
         }
         
-        $permission = EntrustPermission::find($request->permissionid);
-        if (!$permission) {
-            return Lib::sendError("permission tidak ditemukan");
+        $user = config('entrust.user')::find($request->userid);
+        if (!$user) {
+            return Lib::sendError("user tidak ditemukan");
         }
         
-        PermissionRole::where('permission_id', $request->permissionid)
+        Roleuser::where('user_id', $request->userid)
                 ->where('role_id',$request->roleid)->delete();
         
         return Lib::sendData(null);
     }
     
-    public function permissionofrole($roleid){
-        $result = Role::join('permission_role','roles.id', '=', 'permission_role.role_id')
-                ->join('permissions','permission_role.permission_id','=','permissions.id')
-                ->select('permissions.*')
-                ->where('role_id',$roleid)
+    public function roleofuser($userid){
+        $result = config('entrust.user')::join('role_user','users.id', '=', 'role_user.user_id')
+                ->join('roles','role_user.role_id','=','roles.id')
+                ->select('roles.*')
+                ->where('user_id',$userid)
                 ->paginate(config('entrust.paginate'));
         return Lib::sendData($result);
     }
     
-    public function roleofpermission($permissionid){
+    public function userofrole($roleid){
         
-        $result = Permission::join("permission_role","permissions.id", '=', "permission_role.permission_id")
-                ->join('roles','permission_role.role_id','=','roles.id')
-                ->select('roles.*')
-                ->where('permission_id',$permissionid)
+        $result = Role::join("role_user","roles.id", '=', "role_user.role_id")
+                ->join('users','role_user.user_id','=','users.id')
+                ->select('users.id','users.name','users.email')
+                ->where('role_id',$roleid)
                 ->paginate(config('entrust.paginate'));
         return Lib::sendData($result);
     }

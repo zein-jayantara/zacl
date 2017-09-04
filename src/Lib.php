@@ -7,7 +7,7 @@ class Lib {
         return response()->json([
             'status' => true,
             'message' => $message,
-            'data' => $data,
+            'result' => $data,
             ]);
     }
     
@@ -15,7 +15,7 @@ class Lib {
         return response()->json([
             'status' => false,
             'message' => $message,
-            'data' => null,
+            'result' => null,
             ]);
     }
 }

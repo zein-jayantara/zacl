@@ -12,7 +12,14 @@ Route::group(['prefix' => 'zacl','middleware' => ['auth:api','isadmin:api']], fu
     Route::get('permission/{id}', 'Zein\Zacl\Controllers\PermissionsController@show');
     Route::delete('permission/{id}', 'Zein\Zacl\Controllers\PermissionsController@delete');
     
-    Route::post('attach', 'Zein\Zacl\Controllers\PermissionsrolesController@attach');
-    Route::post('unattach', 'Zein\Zacl\Controllers\PermissionsrolesController@unattach');
+    Route::get('permissionofrole/{roleid}', 'Zein\Zacl\Controllers\PermissionsrolesController@permissionofrole');
+    Route::get('roleofpermission/{permissionid}', 'Zein\Zacl\Controllers\PermissionsrolesController@roleofpermission');
+    Route::post('permissionrole', 'Zein\Zacl\Controllers\PermissionsrolesController@attach');
+    Route::delete('permissionrole', 'Zein\Zacl\Controllers\PermissionsrolesController@unattach');
+    
+    Route::get('roleofuser/{userid}', 'Zein\Zacl\Controllers\RolesusersController@roleofuser');
+    Route::get('userofrole/{roleid}', 'Zein\Zacl\Controllers\RolesusersController@userofrole');
+    Route::post('roleuser', 'Zein\Zacl\Controllers\RolesusersController@attach');
+    Route::delete('roleuser', 'Zein\Zacl\Controllers\RolesusersController@unattach');
     
 });

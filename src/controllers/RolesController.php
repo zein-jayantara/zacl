@@ -13,7 +13,7 @@ use Zein\Zacl\Models\Role;
 class RolesController extends Controller{
     
     public function index(){   
-        $data = DB::table('roles')->get();
+        $data = DB::table('roles')->paginate(config('entrust.paginate'));
         return Lib::sendData($data);
     }
     
@@ -32,20 +32,20 @@ class RolesController extends Controller{
         }
         
         if(!$request->id){
-            $owner = new EntrustRole();
+            $role = new EntrustRole();
         }else{
-            $owner = EntrustRole::find($request->id);
-            if(!$owner){
+            $role = EntrustRole::find($request->id);
+            if(!$role){
                 return Lib::sendError("id $request->id tidak ada");
             }
         }
         
-        $owner->name         = $request->name;
-        $owner->display_name = $request->display_name; // optional
-        $owner->description  = $request->description; // optional
-        $owner->save();
-
-        return Lib::sendData($owner);
+        $role->name         = $request->name;
+        $role->display_name = $request->display_name; // optional
+        $role->description  = $request->description; // optional
+        $role->save();
+        
+        return Lib::sendData($role);
         
     }
     
@@ -55,7 +55,10 @@ class RolesController extends Controller{
     
     public function delete($id){ 
         $role = Role::find($id);
-        $role->delete();
+        if($role){
+            $role->delete();
+        }
+        
         return Lib::sendData(null);
     }
     
