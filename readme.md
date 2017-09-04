@@ -1,6 +1,6 @@
-# JMI Barang
+# JMI ZACL
 
-Testing module barang
+Testing module ACL
 
 
 ## Installation Step
