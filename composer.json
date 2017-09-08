@@ -8,9 +8,7 @@
             "email": "zein@jayantara.co.id"
         }
     ],
-    "require": {
-        "zizaco/entrust": "1.*"
-    },
+    "require": {},
     "autoload": {
         "psr-4": {
             "Zein\\Zacl\\": "src/"

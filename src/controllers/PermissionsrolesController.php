@@ -4,8 +4,6 @@ namespace Zein\Zacl\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Zizaco\Entrust\EntrustRole;
-use Zizaco\Entrust\EntrustPermission;
 use DB;
 use Validator;
 use Zein\Zacl\Lib;
@@ -25,23 +23,16 @@ class PermissionsrolesController extends Controller{
             return Lib::sendError($validator->errors()->first());
         }
         
-        $role = EntrustRole::find($request->roleid);
+        $role = Role::find($request->roleid);
         if (!$role) {
             return Lib::sendError("role tidak ditemukan");
         }
         
-        $permission = EntrustPermission::find($request->permissionid);
+        $permission = Permission::find($request->permissionid);
         if (!$permission) {
             return Lib::sendError("permission tidak ditemukan");
         }
-        
-        PermissionRole::updateOrCreate([
-                    'permission_id' => $request->permissionid,
-                    'role_id' => $request->roleid,
-                ],[
-                    'permission_id' => $request->permissionid,
-                    'role_id' => $request->roleid,
-                ]);
+        $role->attachPermission($permission);
         
         return Lib::sendData(null);
     }
@@ -56,38 +47,36 @@ class PermissionsrolesController extends Controller{
             return Lib::sendError($validator->errors()->first());
         }
         
-        $role = EntrustRole::find($request->roleid);
+        $role = Role::find($request->roleid);
         if (!$role) {
             return Lib::sendError("role tidak ditemukan");
         }
         
-        $permission = EntrustPermission::find($request->permissionid);
+        $permission = Permission::find($request->permissionid);
         if (!$permission) {
             return Lib::sendError("permission tidak ditemukan");
         }
         
-        PermissionRole::where('permission_id', $request->permissionid)
-                ->where('role_id',$request->roleid)->delete();
+        $role->detachPermission($permission);
         
         return Lib::sendData(null);
     }
     
     public function permissionofrole($roleid){
-        $result = Role::join('permission_role','roles.id', '=', 'permission_role.role_id')
-                ->join('permissions','permission_role.permission_id','=','permissions.id')
-                ->select('permissions.*')
-                ->where('role_id',$roleid)
-                ->paginate(config('entrust.paginate'));
+        $role = Role::find($roleid);
+        if (!$role) {
+            return Lib::sendError("role tidak ditemukan");
+        }
+        $result = $role->permissions()->paginate(config('zacl.paginate'));
         return Lib::sendData($result);
     }
     
     public function roleofpermission($permissionid){
-        
-        $result = Permission::join("permission_role","permissions.id", '=', "permission_role.permission_id")
-                ->join('roles','permission_role.role_id','=','roles.id')
-                ->select('roles.*')
-                ->where('permission_id',$permissionid)
-                ->paginate(config('entrust.paginate'));
+        $permission = Permission::find($permissionid);
+        if (!$permission) {
+            return Lib::sendError("permission tidak ditemukan");
+        }
+        $result = $permission->roles()->paginate(config('zacl.paginate'));
         return Lib::sendData($result);
     }
 }

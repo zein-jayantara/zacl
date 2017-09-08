@@ -3,7 +3,6 @@
 namespace Zein\Zacl;
 
 use Illuminate\Support\ServiceProvider;
-use Zizaco\Entrust\EntrustServiceProvider;
 
 class ZaclServiceProvider extends ServiceProvider
 {
@@ -15,14 +14,12 @@ class ZaclServiceProvider extends ServiceProvider
     public function boot()
     {
         include __DIR__.'/routes.php';
-        
         $this->publishes([
-            __DIR__.'/config/config.php' => app()->basePath() . '/config/entrust.php',
+            __DIR__.'/config/config.php' => app()->basePath() . '/config/zacl.php',
         ]);
-        
-        $entrustSP = new EntrustServiceProvider($this->app);
-       
-        $entrustSP->boot();
+        $this->publishes([
+            __DIR__.'/migrations' => base_path('database/migrations'),
+        ],'migrations');
     }
 
     /**
@@ -32,16 +29,11 @@ class ZaclServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
         $this->app->make('Zein\Zacl\Controllers\PermissionsController');
         $this->app->make('Zein\Zacl\Controllers\PermissionsrolesController');
         $this->app->make('Zein\Zacl\Controllers\RolesController');
         $this->app->make('Zein\Zacl\Controllers\RolesusersController');
         
-        $entrustSP = new EntrustServiceProvider($this->app);
-        $entrustSP->register();
-
-        //
     }
     
 }

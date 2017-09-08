@@ -2,6 +2,8 @@
 
 namespace Zein\Zacl;
 
+use Carbon\Carbon;
+
 class Lib {
     public static function sendData($data=[],$message="success"){   
         return response()->json([
@@ -17,5 +19,9 @@ class Lib {
             'message' => $message,
             'result' => null,
             ]);
+    }
+    public static function getExpiredCache(){
+        $minute = config('zacl.cache_minute');
+        return Carbon::now()->addMinutes($minute);
     }
 }
