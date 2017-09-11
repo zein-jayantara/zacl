@@ -2,6 +2,7 @@
 namespace Zein\Zacl\Traits;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Cache\TaggableStore;
 use Zein\Zacl\Lib;
 
 trait ZaclUserTrait{

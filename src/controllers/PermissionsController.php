@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Validator;
-use Zein\Zacl\Lib;
+use Zein\Zacl\Traits\ControllerTrait;
 use Zein\Zacl\Models\Permission;
 use Zein\Zacl\Models\PermissionRole;
 use Route;
 
 class PermissionsController extends Controller{
     
+    use ControllerTrait;
+    public $tagCache = __Class__;
+    
     public function index(){   
-        $data = Permission::paginate(config('zacl.paginate'));
-        return Lib::sendData($data);
+        $result = $this->paginateFromCache($this->tagCache, new Permission());
+        return $this->sendData($result);
     }
     
     public function store(Request $request){ 
@@ -24,20 +27,20 @@ class PermissionsController extends Controller{
         ]);
 
         if ($validator->fails()) {
-            return Lib::sendError($validator->errors()->first());
+            return $this->sendError($validator->errors()->first());
         }
         
         $exists = Permission::where('name',$request->name)->first();
         if($exists){
-            return Lib::sendError("name $request->name sudah ada");
+            return $this->sendError("name $request->name sudah ada");
         }
         
         if(!$request->id){
             $permission = new Permission();
         }else{
-            $permission = Permission::find($request->id);
+            $permission = $this->findFromCache($request->id,new Permission());
             if(!$permission){
-                return Lib::sendError("id $request->id tidak ada");
+                return $this->sendError("id $request->id tidak ada");
             }
         }
         
@@ -45,34 +48,35 @@ class PermissionsController extends Controller{
         $permission->display_name = $request->display_name; // optional
         $permission->description  = $request->description; // optional
         $permission->save();
-
-        return Lib::sendData($permission);
+        $this->clearCache($this->tagCache);
+        
+        return $this->sendData($permission);
         
     }
     
     public function show($id){ 
-        return Lib::sendData(Permission::find($id));
+        return $this->sendData($this->findFromCache($id,new Permission()));
     }
     
     public function delete($id){ 
         $permission = Permission::find($id);
         //cek permission
         if(!$permission){
-            return Lib::sendError("Permission not found");
+            return $this->sendError("Permission not found");
         }
         //route permission tidak boleh di delete
         if(strpos($permission->name,'outegenerate|')){
-            return Lib::sendError("You Can't delete this permission");
+            return $this->sendError("You Can't delete this permission");
         }
         //cek foreign key
         if(PermissionRole::where('permission_id',$permission->id)->first()){
-            return Lib::sendError("This permission used on role");
+            return $this->sendError("This permission used on role");
         }
         //delete permission
         $permission->delete();
+        $this->clearCache($this->tagCache);
         
-        
-        return Lib::sendData(null);
+        return $this->sendData(null);
     }
     
     public function generate(){ 
@@ -109,7 +113,7 @@ class PermissionsController extends Controller{
                 $result->deleted +=1;
             }
         }
-        return Lib::sendData($result);
+        return $this->sendData($result);
     }
     
 }

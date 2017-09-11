@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Validator;
-use Zein\Zacl\Lib;
-use Zein\Zacl\Models\PermissionRole;
+use Zein\Zacl\Traits\ControllerTrait;
 use Zein\Zacl\Models\Permission;
 use Zein\Zacl\Models\Role;
 
 class PermissionsrolesController extends Controller{
+    
+    use ControllerTrait;
+    public $tagCache = __Class__;
     
     public function attach(Request $request){
         $validator = Validator::make($request->all(), [
@@ -20,21 +22,22 @@ class PermissionsrolesController extends Controller{
         ]);
 
         if ($validator->fails()) {
-            return Lib::sendError($validator->errors()->first());
+            return $this->sendError($validator->errors()->first());
         }
         
-        $role = Role::find($request->roleid);
+        $role = $this->findFromCache($request->roleid,new Role());
         if (!$role) {
-            return Lib::sendError("role tidak ditemukan");
+            return $this->sendError("role tidak ditemukan");
         }
         
-        $permission = Permission::find($request->permissionid);
+        $permission = $this->findFromCache($request->permissionid,new Permission());
         if (!$permission) {
-            return Lib::sendError("permission tidak ditemukan");
+            return $this->sendError("permission tidak ditemukan");
         }
         $role->attachPermission($permission);
+        $this->clearCache($this->tagCache);
         
-        return Lib::sendData(null);
+        return $this->sendData(null);
     }
     
     public function unattach(Request $request){
@@ -44,39 +47,40 @@ class PermissionsrolesController extends Controller{
         ]);
 
         if ($validator->fails()) {
-            return Lib::sendError($validator->errors()->first());
+            return $this->sendError($validator->errors()->first());
         }
         
-        $role = Role::find($request->roleid);
+        $role = $this->findFromCache($request->roleid,new Role());
         if (!$role) {
-            return Lib::sendError("role tidak ditemukan");
+            return $this->sendError("role tidak ditemukan");
         }
         
-        $permission = Permission::find($request->permissionid);
+        $permission = $this->findFromCache($request->permissionid,new Permission());
         if (!$permission) {
-            return Lib::sendError("permission tidak ditemukan");
+            return $this->sendError("permission tidak ditemukan");
         }
         
         $role->detachPermission($permission);
+        $this->clearCache($this->tagCache);
         
-        return Lib::sendData(null);
+        return $this->sendData(null);
     }
     
     public function permissionofrole($roleid){
-        $role = Role::find($roleid);
+        $role = $this->findFromCache($roleid,new Role());
         if (!$role) {
-            return Lib::sendError("role tidak ditemukan");
+            return $this->sendError("role tidak ditemukan");
         }
-        $result = $role->permissions()->paginate(config('zacl.paginate'));
-        return Lib::sendData($result);
+        $result = $this->paginateFromCache($this->tagCache, $role->permissions());
+        return $this->sendData($result);
     }
     
     public function roleofpermission($permissionid){
-        $permission = Permission::find($permissionid);
+        $permission = $this->findFromCache($permissionid,new Permission());
         if (!$permission) {
-            return Lib::sendError("permission tidak ditemukan");
+            return $this->sendError("permission tidak ditemukan");
         }
-        $result = $permission->roles()->paginate(config('zacl.paginate'));
-        return Lib::sendData($result);
+        $result = $this->paginateFromCache($this->tagCache, $permission->roles());
+        return $this->sendData($result);
     }
 }

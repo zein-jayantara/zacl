@@ -2,6 +2,7 @@
 namespace Zein\Zacl\Traits;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Cache\TaggableStore;
 use Zein\Zacl\Lib;
 
 trait ZaclRoleTrait{
@@ -41,27 +42,27 @@ trait ZaclRoleTrait{
         }
     }
     
-    public function save(array $options = [])
-    {   //both inserts and updates
-        if(Cache::getStore() instanceof TaggableStore) {
-            Cache::tags('ZaclRole')->flush();
-        }
-        return parent::save($options);
-    }
-    public function delete(array $options = [])
-    {   //soft or hard
-        parent::delete($options);
-        if(Cache::getStore() instanceof TaggableStore) {
-            Cache::tags('ZaclRole')->flush();
-        }
-    }
-    public function restore()
-    {   //soft delete undo's
-        parent::restore();
-        if(Cache::getStore() instanceof TaggableStore) {
-            Cache::tags('ZaclRole')->flush();
-        }
-    }
+//    public function save(array $options = [])
+//    {   //both inserts and updates
+//        if(Cache::getStore() instanceof TaggableStore) {
+//            Cache::tags('ZaclRole')->flush();
+//        }
+//        return parent::save($options);
+//    }
+//    public function delete(array $options = [])
+//    {   //soft or hard
+//        parent::delete($options);
+//        if(Cache::getStore() instanceof TaggableStore) {
+//            Cache::tags('ZaclRole')->flush();
+//        }
+//    }
+//    public function restore()
+//    {   //soft delete undo's
+//        parent::restore();
+//        if(Cache::getStore() instanceof TaggableStore) {
+//            Cache::tags('ZaclRole')->flush();
+//        }
+//    }
     
     public function attachPermission($permission)
     {

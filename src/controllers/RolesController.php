@@ -4,16 +4,16 @@ namespace Zein\Zacl\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
 use Validator;
-use Zein\Zacl\Lib;
+use Zein\Zacl\Traits\ControllerTrait;
 use Zein\Zacl\Models\Role;
 
 class RolesController extends Controller{
-    
-    public function index(){   
-        $data = Role::paginate(config('zacl.paginate'));
-        return Lib::sendData($data);
+    use ControllerTrait;
+    public $tagCache = __Class__;
+    public function index(){ 
+        $result = $this->paginateFromCache($this->tagCache, new Role());
+        return $this->sendData($result);
     }
     
     public function store(Request $request){ 
@@ -22,20 +22,20 @@ class RolesController extends Controller{
         ]);
 
         if ($validator->fails()) {
-            return Lib::sendError($validator->errors()->first());
+            return $this->sendError($validator->errors()->first());
         }
         
         $exists = Role::where('name',$request->name)->first();
         if($exists){
-            return Lib::sendError("name $request->name sudah ada");
+            return $this->sendError("name $request->name sudah ada");
         }
         
         if(!$request->id){
             $role = new Role();
         }else{
-            $role = Role::find($request->id);
+            $role = $this->findFromCache($request->id,new Role());
             if(!$role){
-                return Lib::sendError("id $request->id tidak ada");
+                return $this->sendError("id $request->id tidak ada");
             }
         }
         
@@ -43,22 +43,23 @@ class RolesController extends Controller{
         $role->display_name = $request->display_name; // optional
         $role->description  = $request->description; // optional
         $role->save();
-        
-        return Lib::sendData($role);
+        $this->clearCache($this->tagCache);
+        return $this->sendData($role);
         
     }
     
     public function show($id){ 
-        return Lib::sendData(Role::find($id));
+        return $this->sendData($this->findFromCache($id,new Role()));
     }
     
     public function delete($id){ 
         $role = Role::find($id);
         if($role){
             $role->delete();
+            $this->clearCache($this->tagCache);
         }
         
-        return Lib::sendData(null);
+        return $this->sendData(null);
     }
     
 }
